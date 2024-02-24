@@ -58,6 +58,7 @@ private:
 public:
 	void nhap();
 	float tinhDT();
+	float tinhCV();
 };
 
 
@@ -75,10 +76,114 @@ public:
 //===chuong trinh chinh===
 int main()
 {
+	//Khai bao mang con tro co so hinh
+	Hinh* a[100];	
+	char chon, traLoi;
+	int n = 0;
 
+	//Nhap kich thuoc cac hinh
+	do
+	{
+		cout << "Lua chon hinh nhap kich thuoc (1-TG,2-CN,3-Tron,4-Tru): ";
+		cin >> chon;
+
+		//Tao doi tuong hinh da chon
+		switch(chon)
+		{
+			case '1':
+				a[n] = new HinhTG;
+				break;
+			case '2':
+				a[n] = new HinhCN;
+				break;
+			case '3':
+				a[n] = new HinhTron;
+				break;
+			case '4':
+				a[n] = new HinhTru;
+				break;
+			default:
+				a[n] = new HinhTG;
+		}
+
+		//Dung da hinh dong de nhap kich thuoc cho doi tuong hinh da tao
+		a[n++]->nhap();
+
+		//Hoi co nhap tiep k
+		cout << "\nCo nhap tiep khong(c/k)? ";
+		cin >> traLoi;
+	} while (traLoi == 'c' || traLoi == 'C');
+
+	//Dua ra kich thuoc hinh da nhap
+	cout << "Dien tich cac hinh da nhap la: ";
+	for (int i = 0; i < n; i++)
+		printf("\nHinh thu %d co dien tich la: %0.1f", i + 1, a[i]->tinhDT()); //Goi da hinh dong de tinh dt
 
 	cout << endl;
 	return 0;
 }
 //===dinh nghia ham===
+void HinhTG::nhap()
+{
+	do
+	{
+		cout << "Nhap vao 3 canh tam giac: ";
+		cin >> a >> b >> c;
+
+		if (a + b <= c || a + c <= b || b + c <= a)
+			cout << "3 so da nhap khong phai 3 canh tam giac. Nhap lai.\n";
+	} while (a + b <= c || a + c <= b || b + c <= a);
+}
+
+float HinhTG::tinhDT()
+{
+	if (a + b > c && a + c > b && b + c > a) 
+	{
+		float p = (a + b + c) / 2;
+		return sqrt(p * (p - a) * (p - b) * (p - c));
+	}
+}
+
+void HinhCN::nhap()
+{
+	cout << "Nhap vao 2 canh chu nhat: ";
+	cin >> a >> b;
+}
+
+float HinhCN::tinhDT()
+{
+	return a * b;
+}
+
+void HinhTron::nhap()
+{
+	cout << "Nhap vao ban kinh: ";
+	cin >> r;
+}
+
+float HinhTron::tinhDT()
+{
+	return 3.14 * r * r;
+}
+
+float HinhTron::tinhCV()
+{
+	return 2 * 3.14 * r;
+}
+
+
+void HinhTru::nhap() 
+{
+	//Nhap vao ban kinh ke thua tu lop hinh tron
+	HinhTron::nhap();
+
+	//Nhap chieu cao
+	cout << "Nhap vao chieu cao: ";
+	cin >> h;
+}
+
+float HinhTru::tinhDT()
+{
+	return 2 * HinhTron::tinhDT() + HinhTron::tinhCV() * h;
+}
 
